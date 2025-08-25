@@ -1,39 +1,125 @@
-# This starter workflow is for a CMake project running on a single platform. There is a different starter workflow if you need cross-platform coverage.
-# See: https://github.com/actions/starter-workflows/blob/main/ci/cmake-multi-platform.yml
-name: CMake on a single platform
+name: Embedded CI/CD Pipeline
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ main ]
   pull_request:
-    branches: [ "main" ]
-
-env:
-  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
-  BUILD_TYPE: Release
+    branches: [ main ]
 
 jobs:
+
+  # 1. Build with CMake preset
   build:
-    # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
-    # You can convert this to a matrix build if you need cross-platform coverage.
-    # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      - name: Configure with CMake Preset
+        run: cmake --preset=default
+      - name: Build
+        run: cmake --build --preset=default
 
-    - name: Configure CMake
-      # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
-      # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+  # 2. Static Code Analysis (cppcheck / clang-tidy)
+  static-analysis:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run cppcheck
+        run: cppcheck --enable=all --inconclusive --xml . 2> cppcheck.xml
+      - name: Upload cppcheck Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: static-analysis
+          path: cppcheck.xml
 
-    - name: Build
-      # Build your program with the given configuration
-      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+  # 3. Quality Code Analysis (complexity, coverage)
+  quality-analysis:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install lizard (complexity analysis)
+        run: pip install lizard
+      - name: Run lizard
+        run: lizard src/
 
-    - name: Test
-      working-directory: ${{github.workspace}}/build
-      # Execute tests defined by the CMake configuration.
-      # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
-      run: ctest -C ${{env.BUILD_TYPE}}
+  # 4. Security Code Analysis (GitHub CodeQL)
+  security-analysis:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: github/codeql-action/init@v3
+        with:
+          languages: cpp
+      - uses: github/codeql-action/autobuild@v3
+      - uses: github/codeql-action/analyze@v3
 
+  # 5. Unit Tests with Unity & CMock
+  unit-test:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Unit Tests
+        run: ctest --preset=unit
+
+  # 6. Component Tests (Unity & CMock)
+  component-test:
+    runs-on: ubuntu-latest
+    needs: unit-test
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Component Tests
+        run: ctest --preset=component
+
+  # 7. Component Integration Testing (requires hardware)
+  component-integration-test:
+    runs-on: self-hosted   # You’ll need a runner connected to your board
+    needs: component-test
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Component Integration Tests
+        run: ./scripts/run_component_integration.sh
+
+  # 8. System Integration Testing (Shell + Board)
+  system-integration-test:
+    runs-on: self-hosted
+    needs: component-integration-test
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run System Integration Tests
+        run: ./scripts/run_system_integration.sh
+
+  # 9. System Testing (Robot Framework)
+  system-test:
+    runs-on: self-hosted
+    needs: system-integration-test
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Robot Framework
+        run: pip install robotframework
+      - name: Run System Tests
+        run: robot tests/system/
+
+  # 10. Acceptance Testing (Robot Framework + DUT)
+  acceptance-test:
+    runs-on: self-hosted
+    needs: system-test
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Acceptance Tests
+        run: robot tests/acceptance/
+
+  # 11. Delivery Packaging
+  package:
+    runs-on: ubuntu-latest
+    needs: acceptance-test
+    steps:
+      - uses: actions/checkout@v4
+      - name: Package Build
+        run: cpack --preset=default
+      - name: Upload Package
+        uses: actions/upload-artifact@v4
+        with:
+          name: firmware-package
+          path: build/*.tar.gz
