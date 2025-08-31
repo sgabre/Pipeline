@@ -30,3 +30,9 @@ jobs:
           BUILD_DIR="${GITHUB_WORKSPACE}/build/host/${PRESET}"
           INSTALL_DIR="${GITHUB_WORKSPACE}/libraries/${PRESET}"
           cmake --install "$BUILD_DIR" --prefix "$INSTALL_DIR"
+
+      - name: Upload binaries as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: built-libraries-${{ env.PRESET }}
+          path: libraries/${{ env.PRESET }}
