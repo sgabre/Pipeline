@@ -7,7 +7,6 @@ on:
     branches: [ main ]
 
 jobs:
-
   build:
     runs-on: ubuntu-latest
     env:
@@ -18,10 +17,10 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Configure with CMake Preset
-        run: cmake --preset $PRESET
+        run: cmake --preset ${{ env.PRESET }}
 
       - name: Build
-        run: cmake --build --preset $PRESET
+        run: cmake --build --preset ${{ env.PRESET }}
 
       - name: Install
-        run: cmake --install $BUILD_DIR --prefix $INSTALL_DIR
+        run: cmake --install ${{ env.BUILD_DIR }} --prefix ${{ env.INSTALL_DIR }}
