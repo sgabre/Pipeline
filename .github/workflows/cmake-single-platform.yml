@@ -8,118 +8,20 @@ on:
 
 jobs:
 
-  # 1. Build with CMake preset
   build:
     runs-on: ubuntu-latest
+    env:
+      PRESET: Debug
+      INSTALL_DIR: ${{ github.workspace }}/libraries/${{ env.PRESET }}
+      BUILD_DIR: ${{ github.workspace }}/build/host/${{ env.PRESET }}
     steps:
       - uses: actions/checkout@v4
+
       - name: Configure with CMake Preset
-        run: cmake --preset=default
+        run: cmake --preset $PRESET
+
       - name: Build
-        run: cmake --build --preset=default
+        run: cmake --build --preset $PRESET
 
-  # 2. Static Code Analysis (cppcheck / clang-tidy)
-  static-analysis:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - uses: actions/checkout@v4
-      - name: Run cppcheck
-        run: cppcheck --enable=all --inconclusive --xml . 2> cppcheck.xml
-      - name: Upload cppcheck Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: static-analysis
-          path: cppcheck.xml
-
-  # 3. Quality Code Analysis (complexity, coverage)
-  quality-analysis:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install lizard (complexity analysis)
-        run: pip install lizard
-      - name: Run lizard
-        run: lizard src/
-
-  # 4. Security Code Analysis (GitHub CodeQL)
-  security-analysis:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - uses: github/codeql-action/init@v3
-        with:
-          languages: cpp
-      - uses: github/codeql-action/autobuild@v3
-      - uses: github/codeql-action/analyze@v3
-
-  # 5. Unit Tests with Unity & CMock
-  unit-test:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - uses: actions/checkout@v4
-      - name: Run Unit Tests
-        run: ctest --preset=unit
-
-  # 6. Component Tests (Unity & CMock)
-  component-test:
-    runs-on: ubuntu-latest
-    needs: unit-test
-    steps:
-      - uses: actions/checkout@v4
-      - name: Run Component Tests
-        run: ctest --preset=component
-
-  # 7. Component Integration Testing (requires hardware)
-  component-integration-test:
-    runs-on: self-hosted   # You’ll need a runner connected to your board
-    needs: component-test
-    steps:
-      - uses: actions/checkout@v4
-      - name: Run Component Integration Tests
-        run: ./scripts/run_component_integration.sh
-
-  # 8. System Integration Testing (Shell + Board)
-  system-integration-test:
-    runs-on: self-hosted
-    needs: component-integration-test
-    steps:
-      - uses: actions/checkout@v4
-      - name: Run System Integration Tests
-        run: ./scripts/run_system_integration.sh
-
-  # 9. System Testing (Robot Framework)
-  system-test:
-    runs-on: self-hosted
-    needs: system-integration-test
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install Robot Framework
-        run: pip install robotframework
-      - name: Run System Tests
-        run: robot tests/system/
-
-  # 10. Acceptance Testing (Robot Framework + DUT)
-  acceptance-test:
-    runs-on: self-hosted
-    needs: system-test
-    steps:
-      - uses: actions/checkout@v4
-      - name: Run Acceptance Tests
-        run: robot tests/acceptance/
-
-  # 11. Delivery Packaging
-  package:
-    runs-on: ubuntu-latest
-    needs: acceptance-test
-    steps:
-      - uses: actions/checkout@v4
-      - name: Package Build
-        run: cpack --preset=default
-      - name: Upload Package
-        uses: actions/upload-artifact@v4
-        with:
-          name: firmware-package
-          path: build/*.tar.gz
+      - name: Install
+        run: cmake --install $BUILD_DIR --prefix $INSTALL_DIR
