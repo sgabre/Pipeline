@@ -21,6 +21,13 @@ jobs:
       - name: Run Quality Analysis
         run: echo "TODO"
 
+# 0. Firmware Low-Level Design
+  FirmwareLowLevelDesign:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run Doxygen
+        run: echo "TODO"
+
         
   Build:
     runs-on: ubuntu-latest
