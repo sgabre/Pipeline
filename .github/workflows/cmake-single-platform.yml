@@ -40,7 +40,7 @@ jobs:
   # 2. Unit Testing
   UnitTesting:
     runs-on: ubuntu-latest
-    needs: UnitTesting
+    needs: build
     steps:
       - name: Run Unit Tests
         run: echo "TODO: Add Unit testing"
