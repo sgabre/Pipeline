@@ -7,10 +7,17 @@ on:
     branches: [ main ]
 
 jobs:
+# 2. Unit Testing
+  CodeStaticAnalysis:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run Static Analysis
+        run: echo "TODO"
   Build:
     runs-on: ubuntu-latest
     env:
       PRESET: Debug
+    needs: CodeStaticAnalysis
     steps:
       - uses: actions/checkout@v4
 
