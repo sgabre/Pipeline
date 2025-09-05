@@ -7,12 +7,21 @@ on:
     branches: [ main ]
 
 jobs:
-# 2. Unit Testing
+# 0. Code Static Analysis
   CodeStaticAnalysis:
     runs-on: ubuntu-latest
     steps:
       - name: Run Static Analysis
         run: echo "TODO"
+
+# 0. Code Quality Analysis
+  CodeQualityAnalysis:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run Quality Analysis
+        run: echo "TODO"
+
+        
   Build:
     runs-on: ubuntu-latest
     env:
