@@ -7,14 +7,14 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  Build:
     runs-on: ubuntu-latest
     env:
       PRESET: Debug
     steps:
       - uses: actions/checkout@v4
 
-      - name: Configure with CMake Preset
+      - name: Build Configuration 
         run: |
           BUILD_DIR="${GITHUB_WORKSPACE}/build/host/${PRESET}"
           INSTALL_DIR="${GITHUB_WORKSPACE}/libraries/${PRESET}"
@@ -40,7 +40,7 @@ jobs:
   # 2. Unit Testing
   UnitTesting:
     runs-on: ubuntu-latest
-    needs: build
+    needs: Build
     steps:
       - name: Run Unit Tests
         run: echo "TODO"
@@ -89,6 +89,14 @@ jobs:
   Documentation:
     runs-on: ubuntu-latest
     needs: [UnitTesting, SystemTesting]
+    steps:
+      - name: Generate Documentation
+        run: echo "TODO"
+
+  # 9. Release & Distribution
+  Release:
+    runs-on: ubuntu-latest
+    needs: [Build, Documentation]
     steps:
       - name: Generate Documentation
         run: echo "TODO"
