@@ -44,3 +44,51 @@ jobs:
     steps:
       - name: Run Unit Tests
         run: echo "TODO"
+
+  # 3. Component Testing
+  ComponentTesting:
+    runs-on: ubuntu-latest
+    needs: UnitTesting
+    steps:
+      - name: Run Component Tests
+        run: echo "TODO"
+
+  # 4. Component Integration Testing
+  ComponentIntegrationTesting:
+    runs-on: ubuntu-latest
+    needs: ComponentTesting
+    steps:
+      - name: Run Component Integration Tests
+        run: echo "TODO"
+  
+  # 5. System Integration Testing
+  SystemIntegrationTesting:
+    runs-on: ubuntu-latest
+    needs: ComponentIntegrationTesting
+    steps:
+      - name: Run System Integration Tests
+        run: echo "TODO"
+ 
+  # 6. System Testing
+  SystemTesting:
+    runs-on:  ubuntu-latest
+    needs: SystemIntegrationTesting
+    steps:
+      - name: Deploy and Run Tests
+        run: echo "TODO"
+
+  # 7. Acceptance Testing
+  AcceptanceTesting:
+    runs-on:  ubuntu-latest
+    needs: SystemTesting
+    steps:
+      - name: Run Acceptance Scenarios
+        run: echo "TODO"
+
+  # 8. Documentation & Reporting
+  Documentation:
+    runs-on: ubuntu-latest
+    needs: [UnitTesting, SystemTesting]
+    steps:
+      - name: Generate Documentation
+        run: echo "TODO"
