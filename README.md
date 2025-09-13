@@ -12,10 +12,23 @@ There are the following Stage:
 - Component Testing
 - Component Integration Testing
 - System Integration Testing
+- Deployement (On Testbench)
 - System Testing
 - Acceptance Testing
 - Documentation & Reporting
 - Release & Distribution
+- Deployement (On Productionbench)
+- Production Testing
+
+# Network Architecture/Structure 
+
+* Development Computer: Used for coding, pushing changes, monitoring CI/CD.
+* GitHub hosts your code and triggers workflows.
+* MacMini Intel acts as:
+   * 🐳 Docker Registry → stores your private images (embedded-ci:latest)
+   * 📦 Package Storage → Python (PyPI mirror), CMSIS packs, APT repo
+   * 🌐 HTTP File Server → hosts software installers & toolchains needed for Docker builds.
+* GitHub Runners (self-hosted on Raspberry & MacMini) run jobs inside Docker containers that already contain software environements
 
 # Workflow
 
