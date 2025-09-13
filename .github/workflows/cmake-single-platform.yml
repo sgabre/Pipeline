@@ -9,7 +9,7 @@ on:
 jobs:
 # 0. Code Static Analysis
   CodeStaticAnalysis:
-    runs-on: ubuntu-latest
+    runs-on:  self-hosted
     steps:
       - name: Run Static Analysis
         run: echo "TODO"
@@ -62,7 +62,7 @@ jobs:
 
   # 2. Unit Testing
   UnitTesting:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: Build
     steps:
       - name: Run Unit Tests
@@ -70,7 +70,7 @@ jobs:
 
   # 3. Component Testing
   ComponentTesting:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: UnitTesting
     steps:
       - name: Run Component Tests
@@ -78,7 +78,7 @@ jobs:
 
   # 4. Component Integration Testing
   ComponentIntegrationTesting:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: ComponentTesting
     steps:
       - name: Run Component Integration Tests
@@ -86,7 +86,7 @@ jobs:
   
   # 5. System Integration Testing
   SystemIntegrationTesting:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: ComponentIntegrationTesting
     steps:
       - name: Run System Integration Tests
@@ -94,7 +94,7 @@ jobs:
  
   # 6. System Testing
   SystemTesting:
-    runs-on:  ubuntu-latest
+    runs-on:  self-hosted
     needs: SystemIntegrationTesting
     steps:
       - name: Deploy and Run Tests
@@ -102,7 +102,7 @@ jobs:
 
   # 7. Acceptance Testing
   AcceptanceTesting:
-    runs-on:  ubuntu-latest
+    runs-on:  self-hosted
     needs: SystemTesting
     steps:
       - name: Run Acceptance Scenarios
@@ -110,7 +110,7 @@ jobs:
 
   # 8. Documentation & Reporting
   Reporting:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: [UnitTesting, SystemTesting]
     steps:
       - name: Generate Documentation
@@ -118,7 +118,7 @@ jobs:
 
   # 9. Release & Distribution
   Release:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: [Build, Reporting]
     steps:
       - name: Generate Documentation
