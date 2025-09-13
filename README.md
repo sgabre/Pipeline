@@ -27,11 +27,16 @@ Trigger: on every pull request & push to main
 Runner: ubuntu-latest  
 Docker Image: myregistry.local/embedded-ci:cppcheck   
 Software Environment: cppcheck, clang-tidy, clang-format  
-Artifacts:   
-- Where: artifacts/reports/static-analysis/   
-  - cppcheck.xml,  
-  - clang-tidy.json,
-  - format.patch
+Artifacts:    
+```
+.
+└── artifacts
+    └── reports
+        └── static-analysis
+            ├── cppcheck.xml
+            ├── clang-tidy.json
+            └── format.patch
+```
 
 
 ```yaml
@@ -55,12 +60,16 @@ Trigger: on pull requests
 Runner: ubuntu-latest  
 Docker Image: myregistry.local/embedded-ci:quality  
 Software Environment: cloc, pmccabe, lizard, gcovr  
-Artifacts:  
-- where: artifacts/reports/quality/  
-    - loc.txt,
-    - complexity.json,
-    - coverage.xml
-
+Artifacts:   
+```
+.
+└── artifacts
+    └── reports
+        └── quality
+            ├── loc.txt
+            ├── complexity.json
+            └── coverage.xml
+```
 
 ```yaml
   CodeQualityAnalysis:
@@ -81,12 +90,16 @@ Runner: ubuntu-latest
 Docker Image: myregistry.local/embedded-ci:security  
 Software Environment: flawfinder, trivy, bandit, CodeQL CLI  
 Artifacts:   
-- where: artifacts/reports/security/
-    - flawfinder.txt,
-    - trivy.json,
-    - bandit.json,
-    - codeql.sarif.
-
+```
+.
+└── artifacts
+    └── reports
+        └── security
+            ├── flawfinder.txt
+            ├── trivy.json
+            ├── codeql.sarif
+            └── bandit.json
+```
 
 ```yaml
 ```
@@ -99,8 +112,13 @@ Runner: ubuntu-latest
 Docker Image: myregistry.local/embedded-ci:docs  
 Software Environment: doxygen, graphviz, latex  
 Artifacts: 
-- where: Documents/FirmwareLowLevelDesign/
-    - (HTML + LaTeX/PDF)  
+
+```
+.
+└── Documents
+    └── FirmwareDetailDesign
+        └── FirmwareDetailDesign.pdf
+```
 
 ```yaml
   
@@ -123,12 +141,33 @@ Runner: ubuntu-latest
 Docker Image: myregistry.local/embedded-ci:build  
 Software Environment: cmake, ninja, gcc, arm-none-eabi-gcc, openocd  
 Artifacts: 
-where: 
-- artifacts/binaries/host/${PRESET}/ → host binaries
-- artifacts/libraries/host/${PRESET}/ → host libraries
-- artifacts/binaries/target/${BOARD}/ → .elf, .bin firmware
 
-${PRESET}: Debug, Release, RelWithDebugInfo, SizeOptimization, UnitTest, ComponentTest, ...
+```text
+.
+└── artifacts
+    ├── host
+    │   ├── binaries
+    │   │   └── tests
+    │   │       └── UnitTest
+    │   └── libraries (optionel)
+    │       └── LibraryName
+    │           ├── inc
+    │           └── lib
+    └── target
+        ├── binaries
+        │   └── tests
+        │       ├── ComponentIntegrationTesting
+        │       ├── ComponentTest
+        │       ├── SystemIntegrationTesting
+        │       └── UnitTest
+        ├── libraries
+        │   └── LibraryName
+        │       ├── inc
+        │       └── lib
+        └── packs
+            ├── BoardPack
+            └── SoftwarePack
+```  
 
 
 
@@ -181,6 +220,15 @@ Artifacts:
   ctest.xml,
   coverage.xml  
 
+```
+.
+└── artifacts
+    └── reports
+        └── UnitTest
+            ├── ctest.xml
+            └── coverage.xml
+```
+
 ```yaml
   UnitTesting:
     runs-on: self-hosted
@@ -201,8 +249,15 @@ Trigger: after Unit Testing
 Runner: self-hosted  
 Docker Image: myregistry.local/embedded-ci:component  
 Software Environment: cmocka, QEMU, Python harness  
-Artifacts: artifacts/reports/component/ (component-report.xml)  
+Artifacts: 
 
+```
+.
+└── artifacts
+    └── reports
+        └── ComponentTest
+            └── component-report.xml
+```
 
 
 ```yaml
@@ -227,6 +282,13 @@ Docker Image: myregistry.local/embedded-ci:integration
 Software Environment: pytest, robotframework, pyserial  
 Artifacts: artifacts/reports/component-integration/ (integration-report.xml)  
 
+```
+.
+└── artifacts
+    └── reports
+        └── ComponentIntegrationTest
+            └── integration-report.xml
+```
 
 ```yaml
   # 4. 
@@ -248,8 +310,15 @@ Trigger: after Component Integration Testing
 Runner: self-hosted  
 Docker Image: myregistry.local/embedded-ci:system  
 Software Environment: openocd, jlink, pytest  
-Artifacts: artifacts/reports/system-integration/ (sys-int-report.xml, logs)  
+Artifacts:   
 
+```
+.
+└── artifacts
+    └── reports
+        └── SystemIntegrationTest
+            └── sys-int-report.xml
+```
 
 ```yaml
   SystemIntegrationTesting:
@@ -272,6 +341,14 @@ Docker Image: myregistry.local/embedded-ci:deployement
 Software Environment:  
 Artifacts: 
 
+```
+.
+└── artifacts
+    └── reports
+        └── Flashing
+            └── logs.txt
+```
+
 ## System Testing
 
 Goal: Validate system behavior under defined scenarios.  
@@ -282,6 +359,14 @@ Docker Image: myregistry.local/embedded-ci:systemtest
 Software Environment: pytest, robotframework, docker-compose  
 Artifacts: artifacts/reports/system/ (sys-report.xml, logs)  
 
+```
+.
+└── artifacts
+    └── reports
+        └── system
+            ├── logs
+            └── sys-report.xml
+```
 
 ```yaml
   SystemTesting:
@@ -304,6 +389,14 @@ Docker Image: myregistry.local/embedded-ci:acceptance
 Software Environment: robotframework, cucumber, bdd-scripts  
 Artifacts: artifacts/reports/acceptance/ (acceptance-report.xml)  
 
+```
+.
+└── artifacts
+    └── reports
+        └── acceptance
+            ├── logs
+            └── acceptance-report.xml
+```
 
 ```yaml
   AcceptanceTesting:
@@ -328,6 +421,8 @@ Artifacts:
 artifacts/reports/docs/ (HTML + PDF)  
 artifacts/reports/test-summary/ (merged XML/HTML reports)  
 
+
+
 ```yaml
   Reporting:
     runs-on: self-hosted
@@ -351,6 +446,18 @@ Software Environment:
 Artifacts:
 artifacts/release/${VERSION}/
 Firmware (.elf, .bin), docs, test reports, changelog
+
+```
+.
+└── artifacts
+    └── packs
+        └── ReleasePack
+            ├── manifest.json
+            ├── ReleaseNote.pdf
+            ├── FirmwareBootloader.hex
+            ├── FirmwareApplication.hex
+            └── FirmwareImage.hex
+```
 
 ## Publishing
 
