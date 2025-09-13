@@ -1,5 +1,25 @@
-# embedded CI/CD
+# CI/CD for Embedded Development
 
+This project is a study for CI/CD Embedded Development using the open source tools
+
+There are the following Stage:
+- Code Static Analysis
+- Code Quality Analysis
+- Code Security Analysis
+- Firmware Detailed Design
+- Build
+- Unit Testing
+- Component Testing
+- Component Integration Testing
+- System Integration Testing
+- System Testing
+- Acceptance Testing
+- Documentation & Reporting
+- Release & Distribution
+
+# Workflow
+
+## Code Static Analysis
 ```yaml
 jobs:
   # 0. Code Static Analysis
@@ -13,9 +33,8 @@ jobs:
         run: cppcheck --enable=all --suppress=missingIncludeSystem src/
 ```
 
-
-
-  # 0. Code Quality Analysis
+## Code Quality Analysis
+```yaml
   CodeQualityAnalysis:
     runs-on: ubuntu-latest
     container:
@@ -24,8 +43,11 @@ jobs:
       - uses: actions/checkout@v4
       - name: Run Quality Analysis
         run: cloc src/
+```
 
-  # 0. Firmware Low-Level Design
+## Firmware Detailed Design
+```yaml
+  
   FirmwareLowLevelDesign:
     runs-on: ubuntu-latest
     container:
@@ -34,7 +56,11 @@ jobs:
       - uses: actions/checkout@v4
       - name: Run Doxygen
         run: doxygen Doxyfile
+```
 
+## Build
+
+```yaml
   Build:
     runs-on: ubuntu-latest
     container:
@@ -67,8 +93,10 @@ jobs:
         with:
           name: built-libraries-${{ env.PRESET }}
           path: libraries/${{ env.PRESET }}
+```
 
-  # 2. Unit Testing
+## Unit Testing
+```yaml
   UnitTesting:
     runs-on: self-hosted
     container:
@@ -78,8 +106,11 @@ jobs:
       - uses: actions/checkout@v4
       - name: Run Unit Tests
         run: ctest --test-dir build/host/Debug
+```
 
-  # 3. Component Testing
+## Component Testing
+```yaml
+  # 3. 
   ComponentTesting:
     runs-on: self-hosted
     container:
@@ -88,8 +119,11 @@ jobs:
     steps:
       - name: Run Component Tests
         run: echo "TODO"
+```
 
-  # 4. Component Integration Testing
+## Component Integration Testing
+```yaml
+  # 4. 
   ComponentIntegrationTesting:
     runs-on: self-hosted
     container:
@@ -98,8 +132,10 @@ jobs:
     steps:
       - name: Run Component Integration Tests
         run: echo "TODO"
+```
 
-  # 5. System Integration Testing
+## System Integration Testing
+```yaml
   SystemIntegrationTesting:
     runs-on: self-hosted
     container:
@@ -108,8 +144,10 @@ jobs:
     steps:
       - name: Run System Integration Tests
         run: echo "TODO"
+```
 
-  # 6. System Testing
+## System Testing
+```yaml
   SystemTesting:
     runs-on: self-hosted
     container:
@@ -118,8 +156,10 @@ jobs:
     steps:
       - name: Deploy and Run Tests
         run: echo "TODO"
+```
 
-  # 7. Acceptance Testing
+## Acceptance Testing
+```yaml
   AcceptanceTesting:
     runs-on: self-hosted
     container:
@@ -128,8 +168,10 @@ jobs:
     steps:
       - name: Run Acceptance Scenarios
         run: echo "TODO"
+```
 
-  # 8. Documentation & Reporting
+## Documentation & Reporting
+```yaml
   Reporting:
     runs-on: self-hosted
     container:
@@ -138,8 +180,10 @@ jobs:
     steps:
       - name: Generate Documentation
         run: doxygen Doxyfile
+```
 
-  # 9. Release & Distribution
+## Release & Distribution
+```yaml
   Release:
     runs-on: self-hosted
     container:
@@ -148,3 +192,20 @@ jobs:
     steps:
       - name: Package Release
         run: echo "TODO"
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
