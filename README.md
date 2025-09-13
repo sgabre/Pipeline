@@ -1,24 +1,23 @@
 # CI/CD for Embedded Development
 
-This project is a study for CI/CD Embedded Development using the open source tools
+This project explores a CI/CD pipeline for embedded software development using open-source tools.
 
-There are the following Stage:
-- Code Static Analysis
-- Code Quality Analysis
-- Code Security Analysis
-- Firmware Detailed Design
-- Build
-- Unit Testing
-- Component Testing
-- Component Integration Testing
-- System Integration Testing
-- Deployement (On Testbench)
-- System Testing
-- Acceptance Testing
-- Documentation & Reporting
-- Release & Distribution
-- Deployement (On Productionbench)
-- Production Testing
+The pipeline is organized into the following stages:
+
+* Code Static Analysis – detect coding errors, undefined behavior, and style issues.
+* Code Quality Analysis – measure maintainability, complexity, and compliance with coding standards.
+* Code Security Analysis – identify potential security vulnerabilities in the code.
+* Firmware Detailed Design – generate design documentation (e.g., with Doxygen, diagrams).
+* Build – compile and link the firmware, generate binaries.
+* Unit Testing – validate individual functions and modules.
+* Component Testing – test complete software components in isolation.
+* Component Integration Testing – verify interactions between integrated components.
+* System Integration Testing – validate system behavior across multiple subsystems.
+* Deployment (on Testbench) – flash the firmware onto a test platform (e.g., dev board).
+* System Testing – perform functional and non-functional system-level tests.
+* Acceptance Testing – verify requirements are met from the end-user/product perspective.
+* Documentation & Reporting – generate and publish metrics, reports, and design docs.
+* Release & Distribution – package firmware, documentation, and artifacts for delivery.
 
 # Network Architecture/Structure 
 
