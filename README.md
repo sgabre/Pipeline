@@ -38,7 +38,7 @@ Scope: Source code analysis (host/target independent). Does not cover runtime be
 Trigger: on every pull request & push to main  
 Runner: ubuntu-latest  
 Docker Image: myregistry.local/embedded-ci:cppcheck   
-Software Environment: cppcheck, clang-tidy, clang-format  
+Software Environment: cppcheck, clang-tidy, clang-format, splint 
 Artifacts:    
 ```
 .
@@ -71,7 +71,7 @@ Scope: Host-level source metrics, not target execution efficiency.
 Trigger: on pull requests  
 Runner: ubuntu-latest  
 Docker Image: myregistry.local/embedded-ci:quality  
-Software Environment: cloc, pmccabe, lizard, gcovr  
+Software Environment: cloc, pmccabe, lizard, cscope  
 Artifacts:   
 ```
 .
@@ -100,7 +100,7 @@ Scope: Static vulnerability scanning. Excludes penetration testing or runtime ex
 Trigger: nightly + PRs with sensitive modules  
 Runner: ubuntu-latest  
 Docker Image: myregistry.local/embedded-ci:security  
-Software Environment: flawfinder, trivy, bandit, CodeQL CLI  
+Software Environment: flawfinder,  
 Artifacts:   
 ```
 .
@@ -122,7 +122,7 @@ Scope: Structural/software design only (no hardware schematics).
 Trigger: on push to main or manual  
 Runner: ubuntu-latest  
 Docker Image: myregistry.local/embedded-ci:docs  
-Software Environment: doxygen, graphviz, latex  
+Software Environment: doxygen, graphviz, sphinx  
 Artifacts: 
 
 ```
@@ -151,7 +151,7 @@ Scope: Compilation and linking. No runtime checks.
 Trigger: on PR merge or manual  
 Runner: ubuntu-latest  
 Docker Image: myregistry.local/embedded-ci:build  
-Software Environment: cmake, ninja, gcc, arm-none-eabi-gcc, openocd  
+Software Environment: cmake, ninja, gcc, arm-none-eabi-gcc  
 Artifacts: 
 
 ```text
@@ -226,7 +226,7 @@ Scope: Host-based tests. No hardware drivers or timing dependencies.
 Trigger: after Build  
 Runner: self-hosted  
 Docker Image: myregistry.local/embedded-ci:unittest  
-Software Environment: ctest, gcovr, valgrind  
+Software Environment: ctest, gcovr, valgrind , Unity, UnitTestBoard* 
 Artifacts: 
 . artifacts/reports/unittest/ 
   ctest.xml,
@@ -260,7 +260,7 @@ Scope: Runs in simulation/emulation. No multi-component interactions.
 Trigger: after Unit Testing  
 Runner: self-hosted  
 Docker Image: myregistry.local/embedded-ci:component  
-Software Environment: cmocka, QEMU, Python harness  
+Software Environment: Unity, UnitTestBoard* 
 Artifacts: 
 
 ```
