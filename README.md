@@ -38,7 +38,7 @@ Scope: Source code analysis (host/target independent). Does not cover runtime be
 Trigger: on every pull request & push to main  
 Runner: ubuntu-latest  
 Docker Image: myregistry.local/embedded-ci:cppcheck   
-Software Environment: cppcheck, clang-tidy, clang-format, splint 
+Software Environment: cppcheck, clang-tidy, clang-format, splint   
 Artifacts:    
 ```
 .
@@ -151,7 +151,7 @@ Scope: Compilation and linking. No runtime checks.
 Trigger: on PR merge or manual  
 Runner: ubuntu-latest  
 Docker Image: myregistry.local/embedded-ci:build  
-Software Environment: cmake, ninja, gcc, arm-none-eabi-gcc  
+Software Environment: cmake, ninja, gcc, arm-none-eabi-gcc, Unity, cmoke, UnitTestPlatform*, IntegrationTestPlatform*, Platform*      
 Artifacts: 
 
 ```text
@@ -226,7 +226,7 @@ Scope: Host-based tests. No hardware drivers or timing dependencies.
 Trigger: after Build  
 Runner: self-hosted  
 Docker Image: myregistry.local/embedded-ci:unittest  
-Software Environment: ctest, gcovr, valgrind , Unity, UnitTestBoard* 
+Software Environment: ctest, gcovr, valgrind , Unity, UnitTestBoard*   
 Artifacts: 
 . artifacts/reports/unittest/ 
   ctest.xml,
@@ -260,7 +260,7 @@ Scope: Runs in simulation/emulation. No multi-component interactions.
 Trigger: after Unit Testing  
 Runner: self-hosted  
 Docker Image: myregistry.local/embedded-ci:component  
-Software Environment: Unity, UnitTestBoard* 
+Software Environment: Unity, UnitTestBoard*   
 Artifacts: 
 
 ```
