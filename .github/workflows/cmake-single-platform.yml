@@ -32,7 +32,7 @@ jobs:
   Build:
     runs-on: ubuntu-latest
     #container:
-    #  image: ghcr.io/sgabre/fw-dummy:latest
+    #  image: ghcr.io/sgabre/fw-arm-builder:latest
     env:
       PRESET: Debug
     needs: CodeStaticAnalysis
@@ -63,45 +63,39 @@ jobs:
           path: libraries/${{ env.PRESET }}
 
   # 2. Unit Testing
-  UnitTesting:
+  ComponentTesting:
     runs-on: self-hosted
+    #container:
+    #  image:  ghcr.io/sgabre/fw-stlink-flasher:latest
     needs: Build
     steps:
       - name: Run Unit Tests
         run: echo "TODO"
 
-  # 3. Component Testing
-  ComponentTesting:
-    runs-on: self-hosted
-    needs: UnitTesting
-    steps:
-      - name: Run Component Tests
-        run: echo "TODO"
-
-  # 4. Component Integration Testing
+  # 3. Component Integration Testing
   ComponentIntegrationTesting:
     runs-on: self-hosted
     needs: ComponentTesting
     steps:
       - name: Run Component Integration Tests
         run: echo "TODO"
-  
+
+  # 4. System Testing
+  SystemTesting:
+    runs-on:  self-hosted
+    needs: ComponentIntegrationTesting
+    steps:
+      - name: Deploy and Run Tests
+        run: echo "TODO"
+        
   # 5. System Integration Testing
   SystemIntegrationTesting:
     runs-on: self-hosted
-    needs: ComponentIntegrationTesting
+    needs: SystemTesting
     steps:
       - name: Run System Integration Tests
         run: echo "TODO"
  
-  # 6. System Testing
-  SystemTesting:
-    runs-on:  self-hosted
-    needs: SystemIntegrationTesting
-    steps:
-      - name: Deploy and Run Tests
-        run: echo "TODO"
-
   # 7. Acceptance Testing
   AcceptanceTesting:
     runs-on:  self-hosted
