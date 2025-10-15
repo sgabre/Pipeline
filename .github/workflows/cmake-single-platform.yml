@@ -31,6 +31,8 @@ jobs:
         
   Build:
     runs-on: ubuntu-latest
+    #container:
+    #  image: ghcr.io/your-org/your-image:latest  # or docker.io/username/image:tag
     env:
       PRESET: Debug
     needs: CodeStaticAnalysis
