@@ -32,7 +32,7 @@ jobs:
   Build:
     runs-on: ubuntu-latest
     #container:
-    #  image: ghcr.io/your-org/your-image:latest  # or docker.io/username/image:tag
+    #  image: ghcr.io/sgabre/fw-dummy:latest
     env:
       PRESET: Debug
     needs: CodeStaticAnalysis
