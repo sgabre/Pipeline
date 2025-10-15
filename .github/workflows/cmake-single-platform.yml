@@ -107,7 +107,7 @@ jobs:
   # 8. Documentation & Reporting
   Reporting:
     runs-on: self-hosted
-    needs: [UnitTesting, SystemTesting]
+    needs: [ComponentTesting, SystemTesting]
     steps:
       - name: Generate Documentation
         run: echo "TODO"
